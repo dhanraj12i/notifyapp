@@ -1,16 +1,25 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { account, ID } from "../lib/appwrite";
 import AuthConsumer from "../Context/AuthConsumer";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
   const { setLoggedIn, loggedIn } = AuthConsumer();
 
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
+
   const login = async (email: string, password: string) => {
-    await account.createEmailPasswordSession(email, password);
+    await account.createEmailPasswordSession(email, password).then((res) => {
+      localStorage.setItem("sessionID", res.$id as string);
+    });
     setLoggedIn(await account.get());
+    const data = await account.createJWT();
+    localStorage.setItem("jwt", data.jwt as unknown as string);
+    navigate("/home");
   };
 
   return (
@@ -37,7 +46,12 @@ const Login = () => {
           onChange={(e) => setName(e.target.value)}
         />
 
-        <button type="button" onClick={() => login(email, password)}>
+        <button
+          type="button"
+          onClick={() => {
+            login(email, password);
+          }}
+        >
           Login
         </button>
 
@@ -56,6 +70,7 @@ const Login = () => {
           onClick={async () => {
             await account.deleteSession("current");
             setLoggedIn({});
+            localStorage.removeItem("sessionID");
           }}
         >
           Logout
