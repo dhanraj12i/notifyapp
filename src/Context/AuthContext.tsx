@@ -1,6 +1,5 @@
-import React, { createContext, useState, FC, useContext } from "react";
-import { AuthContextType, AuthProviderProps } from "../types/types";
-import { Models } from "appwrite";
+import { createContext } from "react";
+import { AuthContextType } from "../types/types";
 
 const defaultContextValue: AuthContextType = {
   loggedIn: {},

@@ -13,7 +13,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     if (sessionID && Object.entries(loggedIn).length === 0) {
       console.log("session", sessionID);
       try {
-        const session = await account.getSession(sessionID);
+        const session = await account.getSession(sessionID!);
         console.log("session", session);
         setLoggedIn(session);
       } catch (error) {
@@ -24,18 +24,20 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    if (Object.entries(loggedIn).length === 0) {
+    if (sessionID && Object.entries(loggedIn).length === 0) {
+      console.log("logged in empty");
       effectRan.current = false;
     }
 
     if (effectRan.current === false) {
       checkSession();
+      console.log("logged in");
     }
 
     return () => {
       effectRan.current = true;
     };
-  }, [loggedIn]);
+  }, [loggedIn, sessionID]);
 
   return (
     <AuthContext.Provider value={{ loggedIn, setLoggedIn }}>

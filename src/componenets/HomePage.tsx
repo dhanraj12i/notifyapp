@@ -1,19 +1,50 @@
 import { useState } from "react";
-import { model } from "../geminiAI/configAI";
+import { aiRun } from "../services/serviceAI";
+import { useSnackbar } from "notistack";
+import { account } from "../lib/appwrite";
+import { useNavigate } from "react-router-dom";
+import AuthConsumer from "../Context/AuthConsumer";
+import { notifyInfo } from "./shared/constants";
 
 export const HomePage = () => {
   const [search, setSearch] = useState("");
   const [aiResponse, setResponse] = useState("");
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const navigate = useNavigate();
+  const sessionID = localStorage.getItem("sessionID");
+  const { setLoggedIn } = AuthConsumer();
 
-  const aiRun = async () => {
-    const prompt = `jokes on ashish who is my brother make it short and funny`;
-    const prompt1 = `cute notification to remind for drinking water please make it short quick read`;
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
-    setResponse(text);
+  const handleSearch = async () => {
+    try {
+      const text = await aiRun(); // Call aiRun and wait for the result
+      setResponse(text); // Update the state with the result
+      enqueueSnackbar(text, { variant: "success" });
+    } catch (error) {
+      enqueueSnackbar("text", { variant: "error" });
+      console.error("Error fetching AI response:", error);
+    }
   };
 
+  const logOut = async () => {
+    try {
+      sessionID &&
+        (await account.deleteSession(sessionID).then((res) => {
+          localStorage.removeItem("sessionID");
+          setLoggedIn({});
+        }));
+      enqueueSnackbar("Logout Succesfully ", {
+        variant: notifyInfo.success as
+          | "success"
+          | "default"
+          | "error"
+          | "warning"
+          | "info",
+      });
+    } catch (error) {
+      enqueueSnackbar("Logout Succesfully ", { variant: "error" });
+      console.error("Error fetching AI response:", error);
+    }
+  };
   return (
     <>
       <div>{search}</div>
@@ -22,7 +53,8 @@ export const HomePage = () => {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
-      <button onClick={aiRun}>search</button>
+      <button onClick={handleSearch}>search</button>
+      <button onClick={logOut}>logout</button>
       <div>output:-</div>
       <div>{aiResponse}</div>
     </>
