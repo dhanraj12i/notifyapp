@@ -1,26 +1,24 @@
 import { useState } from "react";
 import { aiRun } from "../services/serviceAI";
 import { useSnackbar } from "notistack";
-import { account } from "../lib/appwrite";
-import { useNavigate } from "react-router-dom";
 import AuthConsumer from "../Context/AuthConsumer";
 import { notifyInfo } from "./shared/constants";
+import { removeSession } from "../graphQL/appServices";
 
 export const HomePage = () => {
   const [search, setSearch] = useState("");
   const [aiResponse, setResponse] = useState("");
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-  const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
   const sessionID = localStorage.getItem("sessionID");
   const { setLoggedIn } = AuthConsumer();
 
   const handleSearch = async () => {
     try {
-      const text = await aiRun(); // Call aiRun and wait for the result
-      setResponse(text); // Update the state with the result
+      const text = await aiRun();
+      setResponse(text);
       enqueueSnackbar(text, { variant: "success" });
     } catch (error) {
-      enqueueSnackbar("text", { variant: "error" });
+      enqueueSnackbar(`${error}`, { variant: "error" });
       console.error("Error fetching AI response:", error);
     }
   };
@@ -28,7 +26,9 @@ export const HomePage = () => {
   const logOut = async () => {
     try {
       sessionID &&
-        (await account.deleteSession(sessionID).then((res) => {
+        (await removeSession(sessionID).then((res) => {
+          console.log(res);
+          alert("remove session");
           localStorage.removeItem("sessionID");
           setLoggedIn({});
         }));
@@ -41,7 +41,6 @@ export const HomePage = () => {
           | "info",
       });
     } catch (error) {
-      enqueueSnackbar("Logout Succesfully ", { variant: "error" });
       console.error("Error fetching AI response:", error);
     }
   };
@@ -54,7 +53,7 @@ export const HomePage = () => {
         onChange={(e) => setSearch(e.target.value)}
       />
       <button onClick={handleSearch}>search</button>
-      <button onClick={logOut}>logout</button>
+      {sessionID && <button onClick={logOut}>logout</button>}
       <div>output:-</div>
       <div>{aiResponse}</div>
     </>

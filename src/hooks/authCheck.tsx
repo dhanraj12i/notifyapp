@@ -5,8 +5,8 @@ import Login from "../componenets/Login";
 
 const RequiredAuth: React.FC = () => {
   const { loggedIn } = useContext(AuthContext);
-  const location = useLocation();
-  const sessionID = useMemo(() => localStorage.getItem("sessionID"), []);
+  // const location = useLocation();
+  // const sessionID = useMemo(() => localStorage.getItem("sessionID"), []);
 
   console.log("Current loggedIn value:", loggedIn);
 
