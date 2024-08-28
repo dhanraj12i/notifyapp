@@ -42,10 +42,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
-          submodules: recursive
-          fetch-depth: 0
+          sparse-checkout: .
       - name: Analyze with SonarCloud
 
         # You can pin the exact commit or the version.
