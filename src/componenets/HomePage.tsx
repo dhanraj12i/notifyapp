@@ -10,7 +10,6 @@ export const HomePage = () => {
   const [search, setSearch] = useState("");
   const [aiResponse, setResponse] = useState("");
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-  const navigate = useNavigate();
   const sessionID = localStorage.getItem("sessionID");
   const { setLoggedIn } = AuthConsumer();
 
@@ -29,8 +28,13 @@ export const HomePage = () => {
     try {
       sessionID &&
         (await account.deleteSession(sessionID).then((res) => {
+          console.log(res);
+
           localStorage.removeItem("sessionID");
           setLoggedIn({});
+          // if ((res.code = 401)) {
+          //   enqueueSnackbar("please login first ", { variant: "error" });
+          // }
         }));
       enqueueSnackbar("Logout Succesfully ", {
         variant: notifyInfo.success as
@@ -41,7 +45,6 @@ export const HomePage = () => {
           | "info",
       });
     } catch (error) {
-      enqueueSnackbar("Logout Succesfully ", { variant: "error" });
       console.error("Error fetching AI response:", error);
     }
   };
@@ -54,7 +57,7 @@ export const HomePage = () => {
         onChange={(e) => setSearch(e.target.value)}
       />
       <button onClick={handleSearch}>search</button>
-      <button onClick={logOut}>logout</button>
+      {sessionID && <button onClick={logOut}>logout</button>}
       <div>output:-</div>
       <div>{aiResponse}</div>
     </>
