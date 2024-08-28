@@ -16,7 +16,6 @@ const Login = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const sessionID = localStorage.getItem("sessionID");
 
   const navigate = useNavigate();
 
@@ -88,25 +87,12 @@ const Login = () => {
         <button
           type="button"
           onClick={async () => {
-            // await account.create(ID.unique(), email, password, name); REST API
-            await createAccount({ email, password, name }); //graphQL
+            await createAccount({ email, password, name });
             login(email, password);
           }}
         >
           Register
         </button>
-        {/* {sessionID && (
-          <button
-            type="button"
-            onClick={async () => {
-              await account.deleteSession("current");
-              setLoggedIn({});
-              localStorage.removeItem("sessionID");
-            }}
-          >
-            Logout
-          </button>
-        )} */}
       </form>
     </div>
   );

@@ -18,7 +18,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
         const session = await getSession(sessionID!);
         {
           Object.entries(session).length !== 0 &&
-            enqueueSnackbar("Session Retrived ", {
+            enqueueSnackbar("Session Retrived", {
               variant: notifyInfo.success as "success",
             });
         }
