@@ -8,7 +8,7 @@ import {
   createAccount,
   createSession,
   getSession,
-} from "../graphQL/serviceAPI";
+} from "../graphQL/appServices";
 
 const Login = () => {
   const { setLoggedIn, loggedIn } = AuthConsumer();
@@ -22,17 +22,27 @@ const Login = () => {
 
   const login = async (email: string, password: string) => {
     const resp = createSession({ email, password });
-    console.log(resp, "login");
     resp
-      .then(({ data }: any) => {
-        setLoggedIn(getSession(data.accountCreateEmailPasswordSession._id));
-        localStorage.setItem(
-          "sessionID",
-          data.accountCreateEmailPasswordSession._id as string
+      .then(({ data, errors }: any) => {
+        const [error] = errors;
+
+        if (errors.length == 0) {
+          setLoggedIn(getSession(data.accountCreateEmailPasswordSession._id));
+          localStorage.setItem(
+            "sessionID",
+            data.accountCreateEmailPasswordSession._id as string
+          );
+        }
+
+        enqueueSnackbar(
+          errors.length == 0 ? "succesfully login " : error.message,
+          {
+            variant:
+              errors.length == 0
+                ? (notifyInfo.success as "success")
+                : (notifyInfo.error as "error"),
+          }
         );
-        enqueueSnackbar("succesfully login ", {
-          variant: notifyInfo.success as "success",
-        });
       })
       .catch((e) => {
         alert(e);
@@ -85,7 +95,7 @@ const Login = () => {
         >
           Register
         </button>
-        {sessionID && (
+        {/* {sessionID && (
           <button
             type="button"
             onClick={async () => {
@@ -96,7 +106,7 @@ const Login = () => {
           >
             Logout
           </button>
-        )}
+        )} */}
       </form>
     </div>
   );

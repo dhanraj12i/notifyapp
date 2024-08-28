@@ -5,6 +5,7 @@ import { account } from "../lib/appwrite";
 import { useNavigate } from "react-router-dom";
 import AuthConsumer from "../Context/AuthConsumer";
 import { notifyInfo } from "./shared/constants";
+import { removeSession } from "../graphQL/appServices";
 
 export const HomePage = () => {
   const [search, setSearch] = useState("");
@@ -27,9 +28,9 @@ export const HomePage = () => {
   const logOut = async () => {
     try {
       sessionID &&
-        (await account.deleteSession(sessionID).then((res) => {
+        (await removeSession(sessionID).then((res) => {
           console.log(res);
-
+          alert("remove session");
           localStorage.removeItem("sessionID");
           setLoggedIn({});
           // if ((res.code = 401)) {

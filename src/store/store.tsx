@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import NotifySlice from "./slice/notify.slice";
+import notifySlice from "./slice/Notify.slice";
 
 const store = configureStore({
   reducer: {
-    Notify: NotifySlice,
+    Notify: notifySlice,
   },
 });
 

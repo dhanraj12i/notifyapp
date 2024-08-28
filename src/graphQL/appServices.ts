@@ -135,4 +135,22 @@ const getSession = (sessionId: string) => {
   return executeGraphQL(query, variables);
 };
 
-export { createAccount, createSession, getSession };
+const removeSession = (sessionId: string) => {
+  const query = `mutation deleteSession(
+    $sessionId: String!
+  ) {
+    accountDeleteSession(
+      sessionId: $sessionId
+    ) {
+       status
+    }
+  }`;
+
+  const variables = {
+    sessionId,
+  };
+
+  return executeGraphQL(query, variables);
+};
+
+export { createAccount, createSession, getSession, removeSession };

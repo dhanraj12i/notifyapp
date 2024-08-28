@@ -2,7 +2,9 @@ import { useState, FC, useEffect, useRef } from "react";
 import { AuthProviderProps } from "../types/types";
 import { Models } from "appwrite";
 import AuthContext from "./AuthContext";
-import { getSession } from "../graphQL/serviceAPI";
+import { getSession } from "../graphQL/appServices";
+import { enqueueSnackbar } from "notistack";
+import { notifyInfo } from "../componenets/shared/constants";
 
 export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [loggedIn, setLoggedIn] = useState<Models.Preferences>({});
@@ -14,8 +16,12 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       console.log("session", sessionID);
       try {
         const session = await getSession(sessionID!);
-        console.log(session, "session");
-
+        {
+          Object.entries(session).length !== 0 &&
+            enqueueSnackbar("Session Retrived ", {
+              variant: notifyInfo.success as "success",
+            });
+        }
         setLoggedIn(session);
       } catch (error) {
         console.error("Session fetch error:", error);
