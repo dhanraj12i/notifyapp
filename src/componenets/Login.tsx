@@ -1,14 +1,10 @@
 import { useState } from "react";
-import { account, ID } from "../lib/appwrite";
+import { account } from "../lib/appwrite";
 import AuthConsumer from "../Context/AuthConsumer";
 import { useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 import { notifyInfo } from "./shared/constants";
-import {
-  createAccount,
-  createSession,
-  getSession,
-} from "../graphQL/appServices";
+import { createAccount, createSession } from "../graphQL/appServices";
 
 const Login = () => {
   const { setLoggedIn, loggedIn } = AuthConsumer();
@@ -23,10 +19,8 @@ const Login = () => {
     const resp = createSession({ email, password });
     resp
       .then(({ data, errors }: any) => {
-        const [error] = errors;
-
-        if (errors.length == 0) {
-          setLoggedIn(getSession(data.accountCreateEmailPasswordSession._id));
+        if (data.accountCreateEmailPasswordSession !== null) {
+          setLoggedIn({ ...data.accountCreateEmailPasswordSession });
           localStorage.setItem(
             "sessionID",
             data.accountCreateEmailPasswordSession._id as string
@@ -34,17 +28,19 @@ const Login = () => {
         }
 
         enqueueSnackbar(
-          errors.length == 0 ? "succesfully login " : error.message,
+          data.accountCreateEmailPasswordSession !== null
+            ? "succesfully login "
+            : errors[0]?.message,
           {
             variant:
-              errors.length == 0
+              data.accountCreateEmailPasswordSession !== null
                 ? (notifyInfo.success as "success")
                 : (notifyInfo.error as "error"),
           }
         );
       })
       .catch((e) => {
-        alert(e);
+        console.error(e);
       });
 
     const data = await account.createJWT();

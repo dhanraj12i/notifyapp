@@ -13,7 +13,6 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
   const checkSession = async () => {
     if (sessionID && Object.entries(loggedIn).length === 0) {
-      console.log("session", sessionID);
       try {
         const session = await getSession(sessionID!);
         {
@@ -32,13 +31,11 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     if (sessionID && Object.entries(loggedIn).length === 0) {
-      console.log("logged in empty");
       effectRan.current = false;
     }
 
     if (effectRan.current === false) {
       checkSession();
-      console.log("logged in");
     }
 
     return () => {

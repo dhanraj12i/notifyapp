@@ -1,5 +1,5 @@
 import React, { useContext, useMemo } from "react";
-import { useLocation, Navigate, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import AuthContext from "../Context/AuthContext";
 import Login from "../componenets/Login";
 
