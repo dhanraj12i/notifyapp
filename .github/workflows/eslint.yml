@@ -23,7 +23,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '14'  # Specify the Node.js version your project uses
+          node-version: '18'  # Specify the Node.js version your project uses
 
       - name: Install ESLint
         run: |
