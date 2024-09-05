@@ -2,9 +2,11 @@ name: ESLint
 
 on:
   push:
-    branches: [ "master", "trunk" ]
+    branches:
+       - '**'
   pull_request:
-    branches: [ "master", "trunk" ]
+    branches: 
+       - '**'
   schedule:
     - cron: '15 15 * * 6'
 
@@ -48,3 +50,4 @@ jobs:
         with:
           sarif_file: eslint-results.sarif
           wait-for-processing: true
+          token: ${{ secrets.GITHUB_TOKEN }}
