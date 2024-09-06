@@ -14,11 +14,13 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v3
+        with:
+          node-version: '16'  # Ensure correct Node.js version
 
       - name: Install dependencies
-        uses: bahmutov/npm-install@v1
+        run: npm ci  # Faster and more reliable than npm install
 
       - name: Build project
         run: npm run build
@@ -41,6 +43,9 @@ jobs:
         with:
           name: production-files
           path: ./dist
+
+      - name: Bypass Jekyll on GitHub Pages
+        run: echo > ./dist/.nojekyll  # Ensures GitHub Pages doesn't apply Jekyll processing
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
