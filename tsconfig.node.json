@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
-    "composite": true,
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
-    "skipLibCheck": true,
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "allowSyntheticDefaultImports": true,
+    "allowSyntheticDefaultImports": true, 
+    "target": "esnext",
+    "module": "esnext",
     "strict": true,
-    "noEmit": true
+    "jsx": "react-jsx",
+    "esModuleInterop": true, // Ensures compatibility between CommonJS and ES modules
+    "moduleResolution": "node", // Proper resolution for Node.js modules
+    "skipLibCheck": true, // Optional, speeds up type checking for node_modules
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["vite.config.ts"]
 }
