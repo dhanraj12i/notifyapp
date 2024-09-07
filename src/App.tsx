@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import Login from "./componenets/Login";
 import "./App.css";
 import { HomePage } from "./componenets/HomePage";
@@ -6,7 +6,7 @@ import RequiredAuth from "./hooks/authCheck";
 
 const App = () => {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route element={<RequiredAuth />}>
           <Route path="/Login" element={<Login />} />
@@ -16,7 +16,7 @@ const App = () => {
           <Route path="/home" element={<HomePage />} />
         </Route>
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 };
 
